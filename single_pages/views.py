@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-
+# single_pages 보여주기
 def landing(request):
     return render(
         request,
