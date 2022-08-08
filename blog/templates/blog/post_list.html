@@ -1,19 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Blog</h1>
+{% extends 'blog/base.html' %}
+{% comment %} {% load static%} {% endcomment %}
+{% comment %} <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap_home.css' %}" media="screen"> {% endcomment %}
+{% block main_area %}<h1>Blog</h1>
 
-    {% for p in post_list %}
-        <hr/>
-        <h2><a href="{{p.get_absolute_url}}">{{p.title}}</a></h2>
-        <h4>{{p.created_at}}</h4>
-        <p>{{p.content}}</p>
-    {% endfor %}
-</body>
-</html>
+{% for p in post_list %}
+<!-- Blog Post -->
+<div class="card mb-4"> {% if p.head_image %} <img class="card-img-top" src="{{ p.head_image.url }}"
+        alt="{{ p }} head image"> {% else %} <img class="card-img-top"
+        src="https://picsum.photos/seed/{{ p.id }}/800/200" alt="random_image"> {% endif %} <div
+        class="card-body">
+        <h2 class="card-title">{{ p.title}}</h2> {% if p.hook_text %} <h5 class="text-muted">{{
+            p.hook_text }}</h5> {% endif %}
+        <!-- 템플릿 필터 : 파이프(|) 문자 사용 -->
+        <p class="card-text">{{ p.content | truncatewords:45 }}</p>
+        <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
+    </div>
+    <div class="card-footer text-muted"> Posted on {{ p.created_at}} by <a href="#">작성자명 쓸 위치</a>
+    </div>
+</div> {% endfor %} {% else %} <h3>아직 게시물이 없습니다.</h3> {% endif %}
+<hr/>
+
+{% endblock %}
