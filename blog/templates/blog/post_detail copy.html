@@ -1,0 +1,34 @@
+{% extends 'blog/base.html' %}
+{% comment %} {% load static%} {% endcomment %}
+{% comment %} <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap_post.css' %}" media="screen"> {% endcomment %}
+<link rel="stylesheet" href="{% static 'blog/css/blog_post.css' %}" media="screen">
+{% block head_title %} {{post.title}} -Blog {% endblock %}
+{% block main_area %}
+<div class="container my-3">
+    <div class="row">
+        <div class="col-md-8 col-lg-9" id="main-area">
+            <div id="post-area">
+            <!-- Title -->
+            <h1 class="mt-4">{{ post.title }}</h1>
+            <h5 class="text-muted">{{ post.hook_text }}</h5>
+        
+            <hr>
+            <!-- Preview Image -->
+            {% if post.head_image %}
+                <img class="img-fluid rounded"src="{{ post.head_image.url }}" alt="{{ post.title }} head_image">
+            {% else %}
+                <img class="img-fluid rounded" src="https://picsum.photos/seed/{{ post.id }}/800/200"alt="random_image">
+            {% endif %} 
+            </hr>
+            <!-- Post content -->        
+            <p>{{ post.content }}</p>
+
+            {% if post.file_upload %}
+                <a href="{{ post.file_upload.url }}" class="btn btn-outline-dark" role="button" download>Download</a>
+            {% endif %}
+        </div>
+    </div>
+</div>          
+        
+
+{% endblock %}
