@@ -8,11 +8,16 @@
             <!-- Post content-->
             <article>
                 <!-- Post header-->
-                <div class="card mb-4" id="post-{{p.pk}}">
+                <div class="card mb-4">
                     <!-- Post title-->
                     <h1 class="fw-bolder mb-1">{{post.title}}</h1>
                     <!-- Post meta content-->
                     <div class="text-muted fst-italic mb-2">{{ post.hook_text }}</div>
+                    <!-- Author -->
+                    <p class="lead">
+                        by
+                        <a href="#">{{ post.author | upper }}</a>
+                    </p>
                     <!-- Post categories-->
                     {% if post.category %}
                         <span class="badge badge-secondary float-right">{{post.category}}</span>

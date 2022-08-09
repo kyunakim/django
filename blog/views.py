@@ -10,11 +10,11 @@ class PostList(ListView):
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
-        context['no_category_post_count']=Post.objects.filter(category=None).count()
-
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        
         return context
 
-def category_page(request,slug):
+def category_page(request, slug):
     if slug == 'no_category':
         category = '미분류'
         post_list = Post.objects.filter(category=None)
@@ -28,20 +28,17 @@ def category_page(request,slug):
         {
             'post_list': post_list,
             'categories': Category.objects.all(),
-            'no_category_post_count':Post.objects.filter(category=None).count(),
-            'category':category,
+            'no_category_post_count': Post.objects.filter(category=None).count(),
+            'category': category,
         }
     )
 
-class PostDetail(ListView):
-    model =  Post
+class PostDetail(DetailView):
+    model = Post
     
-    ordering = '-pk' #최신 포스트부터 보여주기
-
     def get_context_data(self, **kwargs):
         context = super(PostDetail, self).get_context_data()
         context['categories'] = Category.objects.all()
-        context['no_category_post_count']=Post.objects.filter(category=None).count()
-
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
         return context
 
