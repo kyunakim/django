@@ -14,8 +14,11 @@
     <div class="row">
         <!-- Blog entries-->
         <div class="col-lg-8" id="main-area">
-            <h1>Blog {% if category %}<span class="badge badge-secondary">{{category}}</span>{% endif %}</h1>
-            {% if post_list.exists %} {% for p in post_list %}
+            <h1>Blog
+                {% if category %}<span class="badge badge-secondary">{{ category }}</span>{% endif %}
+                {% if tag %}<span class="badge badge-light"><i class = "fas fa-tags"></i>{{ tag }} ({{ tag.post_set.count }})</span>{% endif %}
+            </h1>
+            {% if post_list.exists %}{% for p in post_list %}
             <!-- Featured blog post-->
             <div class="card mb-4" id="post-{{p.pk}}">
                 {% if p.head_image %} 
@@ -35,6 +38,14 @@
                     {% endif %}
                     <!-- 출력 글자 수 제한하기(45개 단어만 출력)-->
                     <p class="card-text">{{ p.content | truncatewords:45 }}</p>
+                    {% if p.tags.exists %}
+                        <i class="fas fa-tags"></i>
+                        {% for tag in p.tags.iterator %}
+                            <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">{{ tag }}</span></a>
+                        {% endfor %}
+                        <br/>
+                        <br/>
+                    {% endif %}
                     <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More →</a>
                 </div>
                 <div class="card-footer text-muted"> Posted on {{ p.created_at }} by <a href="#">{{ p.author | upper }}</a>
