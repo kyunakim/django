@@ -8,14 +8,17 @@
             <!-- Post content-->
             <article>
                 <!-- Post header-->
-                <header class="mb-4">
+                <div class="card mb-4" id="post-{{p.pk}}">
                     <!-- Post title-->
                     <h1 class="fw-bolder mb-1">{{post.title}}</h1>
                     <!-- Post meta content-->
                     <div class="text-muted fst-italic mb-2">{{ post.hook_text }}</div>
                     <!-- Post categories-->
-                    <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+                    {% if post.category %}
+                        <span class="badge badge-secondary float-right">{{post.category}}</span>
+                    {% else %}
+                        <span class="badge badge-secondary float-right">미분류</span>
+                    {% endif %}
                 </header>
                 <!-- Preview image figure-->
                 <figure class="mb-4">
@@ -89,24 +92,20 @@
                 </div>
             </div>
             <!-- Categories widget-->
-            <div class="card mb-4">
+            <div class="card mb-4" id="categories-card">
                 <div class="card-header">Categories</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
-                            </ul>
-                        </div>
+                        <ul>
+                            {% for category in categories %}
+                            <li>
+                                <a href="{{category.get_absolute_url}}> {{category}} ({{category.post_set.count}}) </a>
+                            </li>
+                            {% endfor %}
+                            <li>
+                                <a href="/blog/category/no_category/">미분류 ({{no_category_post_count}})</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
