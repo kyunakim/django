@@ -14,6 +14,15 @@ class PostList(ListView):
         
         return context
 
+class PostDetail(DetailView):
+    model = Post
+    
+    def get_context_data(self, **kwargs):
+        context = super(PostDetail, self).get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
+
 def category_page(request, slug):
     if slug == 'no_category':
         category = '미분류'
@@ -32,16 +41,7 @@ def category_page(request, slug):
             'category': category,
         }
     )
-
-class PostDetail(DetailView):
-    model = Post
     
-    def get_context_data(self, **kwargs):
-        context = super(PostDetail, self).get_context_data()
-        context['categories'] = Category.objects.all()
-        context['no_category_post_count'] = Post.objects.filter(category=None).count()
-        return context
-
 def tag_page(request, slug):
     tag = Tag.objects.get(slug=slug)
     post_list = tag.post_set.all()
