@@ -24,7 +24,7 @@
                     </p>
                     <!-- Post categories-->
                     {% if post.category %}
-                    <span class="badge badge-pill badge-success float-left">{{post.category}}</span>
+                    <span class="badge badge-pill badge-info float-left">{{post.category}}</span>
                     {% else %}
                     <span class="badge badge-pill badge-secondary float-left">미분류</span>
                     {% endif %}
@@ -44,7 +44,7 @@
                     {% if post.tags.exists %}
                     <i class="fas fa-tags"></i>
                     {% for tag in post.tags.iterator %}
-                        <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-secondary">{{ tag }}</span></a>
+                        <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-dark">{{ tag }}</span></a>
                     {% endfor %}
                     <br/>
                     <br/>
