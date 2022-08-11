@@ -42,7 +42,7 @@
                         <h5 class="text-muted">{{p.hook_text }}</h5>
                     {% endif %}
                     <!-- 출력 글자 수 제한하기(45개 단어만 출력)-->
-                        <p class="card-text">{{ p.content | truncatewords:45 }}</p>
+                        <p class="card-text">{{ post.get_content_markdown | truncatewords_html:45 | safe }}</p>
                     {% if p.tags.exists %}
                         <i class="fas fa-tags"></i>
                         {% for tag in p.tags.iterator %}
