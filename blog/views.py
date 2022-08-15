@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 from .models import Post, Category, Tag, Comment
@@ -30,13 +30,16 @@ class PostDetail(DetailView):
         context['comment_form'] = CommentForm
         return context
 
-class PostCreate(LoginRequiredMixin, CreateView):
+class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ['title','hook_text','content','head_image','file_upload','category']
-
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+    
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.is_staff
+    
     def form_valid(self, form):
         current_user = self.request.user
-        if current_user.is_authenticated:
+        if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
             form.instance.author = current_user
             response = super(PostCreate, self).form_valid(form)
 
@@ -44,7 +47,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
             if tags_str:
                 tags_str = tags_str.strip()
 
-                tags_str = tags_str.replace(',',';')
+                tags_str = tags_str.replace(',', ';')
                 tags_list = tags_str.split(';')
 
                 for t in tags_list:
@@ -56,8 +59,9 @@ class PostCreate(LoginRequiredMixin, CreateView):
                     self.object.tags.add(tag)
 
             return response
+
         else:
-            return redirect('/blog/')
+                return redirect('/blog/')
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
@@ -80,7 +84,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
             return super(PostUpdate, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
-    
+
     def form_valid(self, form):
         response = super(PostUpdate, self).form_valid(form)
         self.object.tags.clear()
@@ -169,4 +173,4 @@ def delete_comment(request, pk):
         comment.delete()
         return redirect(post.get_absolute_url())
     else:
-        raise PermissionDenied 
+        raise PermissionDenied  
