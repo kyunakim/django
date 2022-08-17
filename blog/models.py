@@ -1,8 +1,8 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdown
-import os
 
 # Create your models here.
 class Category(models.Model):
@@ -69,8 +69,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.author}::{self.content}'
-    
-    def get_absoulute_url(self):
-        return f'{self.post.get_absoulute_url()}#comment-{self.pk}'
 
+    def get_absolute_url(self):
+        return f'{self.post.get_absolute_url()}#comment-{self.pk}'
 

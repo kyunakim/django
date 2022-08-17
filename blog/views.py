@@ -6,18 +6,19 @@ from django.shortcuts import get_object_or_404
 from .models import Post, Category, Tag, Comment
 from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
-
+from django.db.models import Q
 
 class PostList(ListView):
     model =  Post
 
     ordering = '-pk' #최신 포스트부터 보여주기
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
-        
+
         return context
 
 class PostDetail(DetailView):
@@ -29,6 +30,7 @@ class PostDetail(DetailView):
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         context['comment_form'] = CommentForm
         return context
+
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
@@ -137,7 +139,7 @@ def tag_page(request, slug):
             'categories': Category.objects.all(),
             'no_category_post_count': Post.objects.filter(category=None).count(),
         }
-    ) 
+    )
 
 def new_comment(request, pk):
     if request.user.is_authenticated:
@@ -173,4 +175,21 @@ def delete_comment(request, pk):
         comment.delete()
         return redirect(post.get_absolute_url())
     else:
-        raise PermissionDenied  
+        raise PermissionDenied
+
+class PostSearch(PostList):
+    paginate_by = None
+
+    def get_queryset(self):
+        q = self.kwargs['q']
+        post_list = Post.objects.filter(
+            Q(title__contains=q) | Q(tags__name__contains=q)
+        ).distinct()
+        return post_list
+    
+    def get_context_data(self, **kwargs):
+        context = super(PostSearch, self).get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
+    
+        return context
