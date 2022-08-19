@@ -5,9 +5,9 @@
 {% block main_area %}
 <h1>타이타닉 생존자 예측</h1><br>
 <h2>Input Data</h2><br>
-
-    <form action="{% url 'result' %}"> 
-        
+{% comment %} <form action="{% url 'result' %}">  {% endcomment %}
+    <form action="/ml/ml_result/" method="GET">
+                
         fare_cat:   <input type="text" required name="fare_cat"> <br><br>
         age_cat:    <input type="text" required name="age_cat"> <br><br>
         family:     <input type="text" required name="family"> <br><br>
