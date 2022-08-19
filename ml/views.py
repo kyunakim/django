@@ -8,7 +8,7 @@ def inputdata(request):
     return render(request,'ml/inputdata.html')
 
 def ml_result(request):
-    cls = joblib.load('tcl_model.pkl')
+    cls = joblib.load('ml/tcl_model.pkl')
 
     df = pd.DataFrame(columns=['fare_cat', 'age_cat', 'family', 'sex_female', 'sex_male',
         'embarked_C', 'embarked_Q', 'embarked_S'])
